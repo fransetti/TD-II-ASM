@@ -1,8 +1,9 @@
 section .data
-  arreglo: dd -1,2,3,4,-5,6,7,8,9,-10
-  msg: DB 'positivo', 10
-  msg1: DB 'negativo', 10
-  largo EQU $ - msg 
+  arreglo: dd -1,2,3,4,-5, 6,7,8,9,-10
+  mensajepositivo: DB 'positivo', 10
+  largo EQU $ - mensajepositivo
+  mensajenegativo: DB 'negativo', 10
+  largo2 EQU $ - mensajenegativo
                                
 global _start
 section .text
@@ -15,7 +16,6 @@ section .text
     call sumarArreglo
 
     ; Imprimo el valor en rax
-    mov rax, eax
     mov rdi, rax ; paso como parametro rax como rdi
     call printHex
 
@@ -26,11 +26,34 @@ section .text
 
 sumarArreglo:
   mov rcx, 0 ;iterador
-  mov eax, [rdi+rcx*4] ;guardo en eax la primera posicion
-  mov rcx, 1
-  mov r10, 10
-  mov rbx, 0
-  ret
+  mov eax, 0 ;inicializo eax en 0
+  mov rdx, 10 ;en rdx guardo la cantidad de elementos del arreglo
+
+ciclo:  
+  add eax, [rdi+rcx*4] ;voy sumando
+  inc rcx ;incremento el iterador
+  cmp rcx, rdx ;resto el iterador con la cantidad de elementos
+  js ciclo ;mientras sea negativo, el ciclo se repite
+  cmp eax, 0 
+  js negativo ;si el numero es negativo saltamos
+  mov rax, 4
+  mov rbx, 1
+  mov rcx, mensajepositivo ;imprimimos esto si el numero es positivo
+  mov rdx, largo
+  int 0x80
+  jmp fin
+
+negativo: ;saltamos al final
+  mov rax, 4
+  mov rbx, 1
+  mov rcx, mensajenegativo ;imprimimos esto si el numero es negativo
+  mov rdx, largo
+  int 0x80
+  
+fin:
+ret
+
+  
 
 printHex:
   push rbx

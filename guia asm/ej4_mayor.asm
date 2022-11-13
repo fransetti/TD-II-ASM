@@ -8,7 +8,7 @@ section .text
 
     ; En la etiqueta arreglo se encuentran los 16 numeros a comparar.
     ; dejar el resultado en eax
-
+    mov rdi, arreglo
     call mayor
 
     ; Imprimo el valor en rax
@@ -21,7 +21,24 @@ section .text
     int 0x80
 
 mayor:
-  ; COMPLETAR
+  mov rcx, 0 ;rcx es el iterador
+  mov eax, 0 ;en eax va a estar el numero mayor del array (por hora 0)
+
+ciclo:
+  mov rdx, [rdi+rcx*2] ;guardamos en rdx el elemento siguiente
+  inc rcx ;incrementamos el iterador
+  cmp eax, edx ;comparamos el anterior con el siguiente
+  js esmayor ;si el siguiente es mayor o igual, saltamos a esmayor
+  cmp rcx, 16 ;comparo iterador con cantidad de elementos
+  js ciclo ;mientras sea negativo, el ciclo se repite
+  jmp fin
+
+esmayor:
+  mov eax, edx
+  cmp rcx, 16 ;comparo iterador con cantidad de elementos
+  js ciclo ;mientras sea negativo, el ciclo se repite
+
+fin:
   ret
 
 ; ---------------------------------------------
