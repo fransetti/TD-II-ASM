@@ -1,5 +1,5 @@
 section .data
-  arreglo: dw 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+  arreglo: dw 1,2,3,4,5,6,7,8,16,10,11,12,13,14,15,1
                                
 global _start
 section .text
@@ -8,38 +8,38 @@ section .text
 
     ; En la etiqueta arreglo se encuentran los 16 numeros a comparar.
     ; dejar el resultado en eax
-    mov rdi, arreglo
+    mov edi, arreglo ;en edi guardo la direccion del arreglo
     call mayor
 
     ; Imprimo el valor en rax
-    mov rdi, rax ; paso como parametro rax como rdi
+    mov rdi, rax 
     call printHex
 
     ; Exit
     mov rax, 1     ; funcion 1 
     mov rbx, 0     ; codigo    
-    int 0x80
+    int 0x80 
 
 mayor:
-  mov rcx, 0 ;rcx es el iterador
+  mov cx, 0 ;cx es el iterador
   mov eax, 0 ;en eax va a estar el numero mayor del array (por hora 0)
 
 ciclo:
-  mov rdx, [rdi+rcx*2] ;guardamos en rdx el elemento siguiente
-  inc rcx ;incrementamos el iterador
-  cmp eax, edx ;comparamos el anterior con el siguiente
-  js esmayor ;si el siguiente es mayor o igual, saltamos a esmayor
-  cmp rcx, 16 ;comparo iterador con cantidad de elementos
+  mov dx, [edi+ecx*2] ;en dx guardamos el elemento siguiente del array
+  inc cx ;incrementamos el iterador
+  cmp ax, dx ;comparamos el anterior con el siguiente
+  js esmayor ;si el resultado es negativo es porque el siguiente es mayor, saltamos a esmayor
+  cmp cx, 16 ;comparo iterador con cantidad de elementos del array
   js ciclo ;mientras sea negativo, el ciclo se repite
-  jmp fin
+  jmp fin ;cuando terminemos, saltamos a fin
 
 esmayor:
-  mov eax, edx
-  cmp rcx, 16 ;comparo iterador con cantidad de elementos
+  mov ax, dx ;movemos a ax el nuevo numero mayor encontrado
+  cmp cx, 16 ;comparo iterador con cantidad de elementos del array
   js ciclo ;mientras sea negativo, el ciclo se repite
 
 fin:
-  ret
+  ret ;volvemos al main
 
 ; ---------------------------------------------
 ; printHex toma como parametro un valor en rdi
